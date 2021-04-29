@@ -1,0 +1,24 @@
+{
+    "name": "clothing-store",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "parcel publick/index.html --open",
+        "build": "parcel build publick/index.html"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Anton-Osip/Clothing-store.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Anton-Osip/Clothing-store/issues"
+    },
+    "homepage": "https://github.com/Anton-Osip/Clothing-store#readme",
+    "devDependencies": {
+        "parcel-bundler": "^1.12.5",
+        "sass": "^1.32.12"
+    },
+    "dependencies": {
+        "axios": "^0.21.1"
+    }
+}
