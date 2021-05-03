@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"components/unity.js":[function(require,module,exports) {
+})({"../src/js/components/unity.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -131,7 +131,7 @@ var $ = function $(selector) {
 
 var _default = $;
 exports.default = _default;
-},{}],"components/app.js":[function(require,module,exports) {
+},{}],"../src/js/components/app.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -195,7 +195,7 @@ var App = /*#__PURE__*/function () {
 var _default = new App().init();
 
 exports.default = _default;
-},{"./unity":"components/unity.js"}],"../src/js/components/header.js":[function(require,module,exports) {
+},{"./unity":"../src/js/components/unity.js"}],"../src/js/components/header.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -228,7 +228,7 @@ var Header = /*#__PURE__*/function () {
       this.element = document.createElement('header');
       this.element.classList.add('header');
       (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
-      this.element.innerHTML = "\n        <div class=\"container header__container\">\n            <div class=\"header__logo-wrapper\">\n                <img src=\"img/logo.png\" alt=\"\u041B\u043E\u043B\u043E\u0442\u0438\u043F \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430 \u043E\u0434\u0435\u0436\u0434\u044B\" class=\"header__logo\">\n            </div>\n            <div class=\"header__basket\">\n                <div class=\"header__icon\">\n                    <svg width=\"23\" height=\"23\">\n                        <use xlink:href=\"./img/icons.svg#shape\"></use>\n                    </svg>\n                    <span class=\"header__count\">5</span>\n                </div>\n                <span class=\"header__shape-price\">$ 88</span>\n            </div>\n        </div>";
+      this.element.innerHTML = "\n        <div class=\"container header__container\">\n            <div class=\"header__logo-wrapper\">\n                <img src=\"img/logo.png\" alt=\"\u041B\u043E\u043B\u043E\u0442\u0438\u043F \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430 \u043E\u0434\u0435\u0436\u0434\u044B\" class=\"header__logo\">\n            </div>\n            <div class=\"header__basket\">\n                <div class=\"header__icon\">\n                    <svg width=\"23\" height=\"23\">\n                        <use xlink:href=\"./img/icons.svg#shape\"></use>\n                    </svg>\n                    <span class=\"header__count\">0</span>\n                </div>\n                <span class=\"header__shape-price\">$ 88</span>\n            </div>\n        </div>";
     }
   }, {
     key: "init",
@@ -243,7 +243,7 @@ var Header = /*#__PURE__*/function () {
 
 var header = new Header().init();
 exports.header = header;
-},{"./unity":"components/unity.js"}],"components/nav.js":[function(require,module,exports) {
+},{"./unity":"../src/js/components/unity.js"}],"../src/js/components/nav.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -273,10 +273,18 @@ var Nav = /*#__PURE__*/function () {
   _createClass(Nav, [{
     key: "create",
     value: function create() {
+      var _this = this;
+
       this.element = document.createElement('nav');
       this.element.classList.add('nav');
       (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
-      this.element.innerHTML = '';
+      this.element.innerHTML = "\n        <div class=\"container\">\n            <span class=\"nav__arrow-down\">&dArr;</span>\n            <span class=\"nav__arrow-up\">&uArr;</span>\n            <div class=\"nav__links\">\n                <a id='home' class=\"nav__link\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430</a>\n                <a id='basket' class=\"nav__link\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n                <a id='contacts' class=\"nav__link\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>\n            </div>\n        </div>";
+      (0, _unity.default)('.nav__arrow-down').addEventListener('click', function () {
+        _this.element.classList.add('nav--active');
+      });
+      (0, _unity.default)('.nav__arrow-up').addEventListener('click', function () {
+        _this.element.classList.remove('nav--active');
+      });
     }
   }, {
     key: "init",
@@ -291,7 +299,7 @@ var Nav = /*#__PURE__*/function () {
 
 var nav = new Nav().init();
 exports.nav = nav;
-},{"./unity":"components/unity.js"}],"components/main.js":[function(require,module,exports) {
+},{"./unity":"../src/js/components/unity.js"}],"../src/js/components/main.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -315,16 +323,62 @@ var Main = /*#__PURE__*/function () {
   function Main() {
     _classCallCheck(this, Main);
 
+    _defineProperty(this, "basket", []);
+
     _defineProperty(this, "element", '');
   }
 
   _createClass(Main, [{
+    key: "addProductsToBasket",
+    value: function addProductsToBasket(event) {
+      var item = event.target.closest('.card');
+      var cardPrice = item.querySelector('.card__price>span').innerHTML;
+      this.basket.price += +cardPrice;
+      this.basket.count++;
+    }
+  }, {
+    key: "drowWindow",
+    value: function drowWindow() {
+      var _this = this;
+
+      var products = JSON.parse(localStorage.getItem('products'));
+      products.forEach(function (product) {
+        (0, _unity.default)('.main>.container>.row').insertAdjacentHTML('beforeend', "\n            <div class=\" col-12 col-sm-6 col-md-4 col-lg-3\">\n                <div class=\"card\" data-id='".concat(product.id, "'>\n                    <div class=\"card__img-wrapper\">\n                        <img src=\"").concat(product.image, "\" alt=\"").concat(product.title, "\" class=\"card__img\">\n                    </div>\n                    <p class=\"card__title\">").concat(product.title, "</p>\n                    <p class=\"card__description\">").concat(product.description, "</p>\n                    <p class=\"card__price\">$ <span> ").concat(product.price, "</span></p>\n                    <div class='card__buy'>\n                        <div class='card__buy-remove'>&ndash;</div>\n                        <div class='card__buy-count'>").concat(_this.basket.count, "</div>\n                        <div class='card__buy-add'>+</div>\n                    </div>\n                    <div class=\"card__add\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043A\u0430\u0440\u0437\u0438\u043D\u0443</div>\n                </div>\n            </div>"));
+      });
+      document.querySelectorAll('.card__add').forEach(function (elem) {
+        elem.addEventListener('click', _this.addProductsToBasket.bind(_this));
+      });
+      document.querySelectorAll('.card__buy-remove').forEach(function (elem) {
+        elem.addEventListener('click', function (event) {
+          if (_this.basket.count != 0) {
+            _this.basket.count--;
+            event.target.nextElementSibling.innerHTML = _this.basket.count;
+            var item = event.target.closest('.card');
+            var cardPrice = item.querySelector('.card__price>span').innerHTML;
+            _this.basket.price -= +cardPrice;
+            console.log(_this.basket);
+          }
+        });
+      });
+      document.querySelectorAll('.card__buy-add').forEach(function (elem) {
+        elem.addEventListener('click', function (event) {
+          _this.basket.count++;
+          event.target.previousElementSibling.innerHTML = _this.basket.count;
+          var item = event.target.closest('.card');
+          var cardPrice = item.querySelector('.card__price>span').innerHTML;
+          _this.basket.price += +cardPrice;
+          console.log(_this.basket);
+        });
+      });
+    }
+  }, {
     key: "create",
     value: function create() {
       this.element = document.createElement('main');
       this.element.classList.add('main');
       (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
-      this.element.innerHTML = '';
+      this.element.innerHTML = "<div class=\"container\">\n            <div class=\"row\">\n            </div>\n        </div>";
+      this.drowWindow();
     }
   }, {
     key: "init",
@@ -339,7 +393,7 @@ var Main = /*#__PURE__*/function () {
 
 var main = new Main().init();
 exports.main = main;
-},{"./unity":"components/unity.js"}],"components/footer.js":[function(require,module,exports) {
+},{"./unity":"../src/js/components/unity.js"}],"../src/js/components/footer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -372,7 +426,7 @@ var Footer = /*#__PURE__*/function () {
       this.element = document.createElement('footer');
       this.element.classList.add('footer');
       (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
-      this.element.innerHTML = '';
+      this.element.innerHTML = "\n        <div class=\"container\">\n            <div class=\"footer__cope\">@\u0414\u0430\u043B\u0435\u043A\u043E-\u0434\u0430\u043B\u0435\u043A\u043E \u0437\u0430 \u0441\u043B\u043E\u0432\u0435\u0441\u043D\u044B\u043C\u0438 \u0433\u043E\u0440\u0430\u043C\u0438 \u0432 \u0441\u0442\u0440\u0430\u043D\u0435.</div>\n        </div>";
     }
   }, {
     key: "init",
@@ -387,7 +441,7 @@ var Footer = /*#__PURE__*/function () {
 
 var footer = new Footer().init();
 exports.footer = footer;
-},{"./unity":"components/unity.js"}],"index.js":[function(require,module,exports) {
+},{"./unity":"../src/js/components/unity.js"}],"../src/js/index.js":[function(require,module,exports) {
 "use strict";
 
 var _unity = _interopRequireDefault(require("./components/unity"));
@@ -403,7 +457,7 @@ var _main = _interopRequireDefault(require("./components/main.js"));
 var _footer = _interopRequireDefault(require("./components/footer.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./components/unity":"components/unity.js","./components/app.js":"components/app.js","./components/header.js":"../src/js/components/header.js","./components/nav.js":"components/nav.js","./components/main.js":"components/main.js","./components/footer.js":"components/footer.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./components/unity":"../src/js/components/unity.js","./components/app.js":"../src/js/components/app.js","./components/header.js":"../src/js/components/header.js","./components/nav.js":"../src/js/components/nav.js","./components/main.js":"../src/js/components/main.js","./components/footer.js":"../src/js/components/footer.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -431,7 +485,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60680" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49658" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -607,5 +661,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","../src/js/index.js"], null)
 //# sourceMappingURL=/js.6c09a745.js.map

@@ -7,7 +7,10 @@ class Footer {
         this.element = document.createElement('footer');
         this.element.classList.add('footer');
         $('.app').insertAdjacentElement('beforeend', this.element);
-        this.element.innerHTML = '';
+        this.element.innerHTML = `
+        <div class="container">
+            <div class="footer__cope">@Далеко-далеко за словесными горами в стране.</div>
+        </div>`;
     }
 
     init() {

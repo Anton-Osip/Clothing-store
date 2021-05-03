@@ -1,0 +1,9 @@
+.footer {
+    padding: 15px 0;
+    background-color: rgba(#000, 0.8);
+    text-align: center;
+    &__cope {
+        @include font(400, 0.8rem, 1em, $font-family);
+        color: rgba(247, 247, 247, 0.975);
+    }
+}

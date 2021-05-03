@@ -17,7 +17,7 @@ class Header {
                     <svg width="23" height="23">
                         <use xlink:href="./img/icons.svg#shape"></use>
                     </svg>
-                    <span class="header__count">5</span>
+                    <span class="header__count">0</span>
                 </div>
                 <span class="header__shape-price">$ 88</span>
             </div>
