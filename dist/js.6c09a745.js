@@ -125,7 +125,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var $ = function $(selector) {
+const $ = selector => {
   return document.querySelector(selector);
 };
 
@@ -143,54 +143,36 @@ var _unity = _interopRequireDefault(require("./unity"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+class App {
+  element = '';
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var App = /*#__PURE__*/function () {
-  function App() {
-    _classCallCheck(this, App);
-
-    _defineProperty(this, "element", '');
+  async storage() {
+    const response = await fetch('https://fakestoreapi.com/products');
+    const result = await response.json();
+    await result.map(product => {
+      product.inCart = false;
+      product.quantity = 0;
+    });
+    localStorage.setItem('productsData', JSON.stringify(result));
+    sessionStorage.setItem('productsData', JSON.stringify(result));
   }
 
-  _createClass(App, [{
-    key: "storage",
-    value: function storage() {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', 'https://fakestoreapi.com/products', true);
-      xhr.send();
-      xhr.addEventListener('readystatechange', function () {
-        if (xhr.readyState != 4 || xhr.status > 300 || xhr.status < 200) return;
-        localStorage.setItem('products', xhr.responseText);
-      });
-    }
-  }, {
-    key: "create",
-    value: function create() {
-      this.element = document.createElement('div');
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      this.element.classList.add('app');
-      (0, _unity.default)('body').appendChild(this.element);
-    }
-  }, {
-    key: "init",
-    value: function init() {
-      if (localStorage.length == 0) this.storage();
-      this.create();
-      this.render();
-    }
-  }]);
+  create() {
+    this.element = document.createElement('div');
+  }
 
-  return App;
-}();
+  render() {
+    this.element.classList.add('app');
+    (0, _unity.default)('body').appendChild(this.element);
+  }
+
+  init() {
+    if (localStorage.length == 0) this.storage();
+    this.create();
+    this.render();
+  }
+
+}
 
 var _default = new App().init();
 
@@ -207,41 +189,38 @@ var _unity = _interopRequireDefault(require("./unity"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+class Header {
+  element = '';
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var Header = /*#__PURE__*/function () {
-  function Header() {
-    _classCallCheck(this, Header);
-
-    _defineProperty(this, "element", '');
+  create() {
+    this.element = document.createElement('header');
+    this.element.classList.add('header');
+    (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
+    this.element.innerHTML = `
+        <div class="container header__container">
+            <div class="header__logo-wrapper">
+                <img src="img/logo.png" alt="Лолотип магазина одежды" class="header__logo">
+            </div>
+            <div class="header__basket">
+                <div class="header__icon">
+                    <svg width="23" height="23">
+                        <use xlink:href="./img/icons.svg#shape"></use>
+                    </svg>
+                    <span class="header__count">0</span>
+                </div>
+                <span class="header__shape-price">$ <span>0</span></span>
+            </div>
+        </div>`;
   }
 
-  _createClass(Header, [{
-    key: "create",
-    value: function create() {
-      this.element = document.createElement('header');
-      this.element.classList.add('header');
-      (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
-      this.element.innerHTML = "\n        <div class=\"container header__container\">\n            <div class=\"header__logo-wrapper\">\n                <img src=\"img/logo.png\" alt=\"\u041B\u043E\u043B\u043E\u0442\u0438\u043F \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0430 \u043E\u0434\u0435\u0436\u0434\u044B\" class=\"header__logo\">\n            </div>\n            <div class=\"header__basket\">\n                <div class=\"header__icon\">\n                    <svg width=\"23\" height=\"23\">\n                        <use xlink:href=\"./img/icons.svg#shape\"></use>\n                    </svg>\n                    <span class=\"header__count\">0</span>\n                </div>\n                <span class=\"header__shape-price\">$ 88</span>\n            </div>\n        </div>";
-    }
-  }, {
-    key: "init",
-    value: function init() {
-      this.create();
-      return this.element;
-    }
-  }]);
+  init() {
+    this.create();
+    return this.element;
+  }
 
-  return Header;
-}();
+}
 
-var header = new Header().init();
+const header = new Header().init();
 exports.header = header;
 },{"./unity":"../src/js/components/unity.js"}],"../src/js/components/nav.js":[function(require,module,exports) {
 "use strict";
@@ -255,49 +234,48 @@ var _unity = _interopRequireDefault(require("./unity"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+class Nav {
+  element = '';
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var Nav = /*#__PURE__*/function () {
-  function Nav() {
-    _classCallCheck(this, Nav);
-
-    _defineProperty(this, "element", '');
+  create() {
+    this.element = document.createElement('nav');
+    this.element.classList.add('nav');
+    (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
+    this.element.innerHTML = `
+        <div class="container">
+            <span class="nav__arrow-down">&dArr;</span>
+            <span class="nav__arrow-up">&uArr;</span>
+            <div class="nav__links">
+                <a id='home' class="nav__link">Главная страница</a>
+                <a id='cart' class="nav__link">Корзина</a>
+                <a id='contacts' class="nav__link">Контакты</a>
+            </div>
+        </div>`;
+    (0, _unity.default)('.nav__arrow-down').addEventListener('click', () => {
+      this.element.classList.add('nav--active');
+    });
+    (0, _unity.default)('.nav__arrow-up').addEventListener('click', () => {
+      this.element.classList.remove('nav--active');
+    });
+    (0, _unity.default)('#home').addEventListener('click', () => {
+      window.location.hash = 'Home';
+    });
+    (0, _unity.default)('#cart').addEventListener('click', () => {
+      window.location.hash = 'Cart';
+    });
+    (0, _unity.default)('#contacts').addEventListener('click', () => {
+      window.location.hash = 'Contacts';
+    });
   }
 
-  _createClass(Nav, [{
-    key: "create",
-    value: function create() {
-      var _this = this;
+  init() {
+    this.create();
+    return this.element;
+  }
 
-      this.element = document.createElement('nav');
-      this.element.classList.add('nav');
-      (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
-      this.element.innerHTML = "\n        <div class=\"container\">\n            <span class=\"nav__arrow-down\">&dArr;</span>\n            <span class=\"nav__arrow-up\">&uArr;</span>\n            <div class=\"nav__links\">\n                <a id='home' class=\"nav__link\">\u0413\u043B\u0430\u0432\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430</a>\n                <a id='basket' class=\"nav__link\">\u041A\u043E\u0440\u0437\u0438\u043D\u0430</a>\n                <a id='contacts' class=\"nav__link\">\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</a>\n            </div>\n        </div>";
-      (0, _unity.default)('.nav__arrow-down').addEventListener('click', function () {
-        _this.element.classList.add('nav--active');
-      });
-      (0, _unity.default)('.nav__arrow-up').addEventListener('click', function () {
-        _this.element.classList.remove('nav--active');
-      });
-    }
-  }, {
-    key: "init",
-    value: function init() {
-      this.create();
-      return this.element;
-    }
-  }]);
+}
 
-  return Nav;
-}();
-
-var nav = new Nav().init();
+const nav = new Nav().init();
 exports.nav = nav;
 },{"./unity":"../src/js/components/unity.js"}],"../src/js/components/main.js":[function(require,module,exports) {
 "use strict";
@@ -311,87 +289,146 @@ var _unity = _interopRequireDefault(require("./unity"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var Main = /*#__PURE__*/function () {
-  function Main() {
-    _classCallCheck(this, Main);
-
-    _defineProperty(this, "basket", []);
-
-    _defineProperty(this, "element", '');
+class Main {
+  constructor() {
+    this.productsData = JSON.parse(sessionStorage.getItem('productsData'));
   }
 
-  _createClass(Main, [{
-    key: "addProductsToBasket",
-    value: function addProductsToBasket(event) {
-      var item = event.target.closest('.card');
-      var cardPrice = item.querySelector('.card__price>span').innerHTML;
-      this.basket.price += +cardPrice;
-      this.basket.count++;
-    }
-  }, {
-    key: "drowWindow",
-    value: function drowWindow() {
-      var _this = this;
+  element = '';
 
-      var products = JSON.parse(localStorage.getItem('products'));
-      products.forEach(function (product) {
-        (0, _unity.default)('.main>.container>.row').insertAdjacentHTML('beforeend', "\n            <div class=\" col-12 col-sm-6 col-md-4 col-lg-3\">\n                <div class=\"card\" data-id='".concat(product.id, "'>\n                    <div class=\"card__img-wrapper\">\n                        <img src=\"").concat(product.image, "\" alt=\"").concat(product.title, "\" class=\"card__img\">\n                    </div>\n                    <p class=\"card__title\">").concat(product.title, "</p>\n                    <p class=\"card__description\">").concat(product.description, "</p>\n                    <p class=\"card__price\">$ <span> ").concat(product.price, "</span></p>\n                    <div class='card__buy'>\n                        <div class='card__buy-remove'>&ndash;</div>\n                        <div class='card__buy-count'>").concat(_this.basket.count, "</div>\n                        <div class='card__buy-add'>+</div>\n                    </div>\n                    <div class=\"card__add\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043A\u0430\u0440\u0437\u0438\u043D\u0443</div>\n                </div>\n            </div>"));
-      });
-      document.querySelectorAll('.card__add').forEach(function (elem) {
-        elem.addEventListener('click', _this.addProductsToBasket.bind(_this));
-      });
-      document.querySelectorAll('.card__buy-remove').forEach(function (elem) {
-        elem.addEventListener('click', function (event) {
-          if (_this.basket.count != 0) {
-            _this.basket.count--;
-            event.target.nextElementSibling.innerHTML = _this.basket.count;
-            var item = event.target.closest('.card');
-            var cardPrice = item.querySelector('.card__price>span').innerHTML;
-            _this.basket.price -= +cardPrice;
-            console.log(_this.basket);
-          }
-        });
-      });
-      document.querySelectorAll('.card__buy-add').forEach(function (elem) {
-        elem.addEventListener('click', function (event) {
-          _this.basket.count++;
-          event.target.previousElementSibling.innerHTML = _this.basket.count;
-          var item = event.target.closest('.card');
-          var cardPrice = item.querySelector('.card__price>span').innerHTML;
-          _this.basket.price += +cardPrice;
-          console.log(_this.basket);
-        });
-      });
-    }
-  }, {
-    key: "create",
-    value: function create() {
-      this.element = document.createElement('main');
-      this.element.classList.add('main');
-      (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
-      this.element.innerHTML = "<div class=\"container\">\n            <div class=\"row\">\n            </div>\n        </div>";
-      this.drowWindow();
-    }
-  }, {
-    key: "init",
-    value: function init() {
-      this.create();
-      return this.element;
-    }
-  }]);
+  drowContactsWindow() {
+    console.log('Contacts');
+  }
 
-  return Main;
-}();
+  drowCartWindow() {
+    console.log('cart');
+  }
 
-var main = new Main().init();
+  setHeaderCart() {
+    const productsData = JSON.parse(sessionStorage.getItem('productsData'));
+    let price = 0;
+    let count = 0;
+
+    for (let elem of productsData) {
+      count += elem.quantity;
+      price += elem.price * elem.quantity;
+    }
+
+    (0, _unity.default)('.header__count').innerHTML = count;
+    (0, _unity.default)('.header__shape-price>span').innerHTML = price;
+  }
+
+  cartBuy(event) {
+    const productElement = event.target.closest('.cart');
+    const eventElementId = +productElement.getAttribute('data-id');
+    const product = this.productsData.find(item => {
+      return item.id == eventElementId;
+    });
+    product.inCart = true;
+    product.count++;
+    this.drowHomeWindow();
+  }
+
+  cartRemove(event) {
+    const productElement = event.target.closest('.cart');
+    const eventElementId = +productElement.getAttribute('data-id');
+    const product = this.productsData.find(item => {
+      return item.id == eventElementId;
+    });
+
+    if (product.quantity != 0) {
+      product.quantity--;
+      this.drowHomeWindow();
+      sessionStorage.setItem('productsData', JSON.stringify(this.productsData));
+      this.setHeaderCart();
+    }
+  }
+
+  cartAdd(event) {
+    const productElement = event.target.closest('.cart');
+    const eventElementId = +productElement.getAttribute('data-id');
+    const product = this.productsData.find(item => {
+      return item.id == eventElementId;
+    });
+    product.quantity++;
+    product.inCart = true;
+    this.drowHomeWindow();
+    sessionStorage.setItem('productsData', JSON.stringify(this.productsData));
+    this.setHeaderCart();
+  }
+
+  drowHomeWindow() {
+    (0, _unity.default)('.main').innerHTML = '';
+    (0, _unity.default)('.main').innerHTML = `  <div class="container">
+                                    <div class="row">
+                                    </div>
+                                </div>`;
+    this.productsData.forEach(product => {
+      (0, _unity.default)('.main>.container>.row').insertAdjacentHTML('beforeend', `
+        <div class=" col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="cart" data-id='${product.id}'>
+                <div class="cart__img-wrapper">
+                    <img src="${product.image}" alt="${product.title}" class="cart__img">
+                </div>
+                <p class="cart__title">${product.title}</p>
+                <p class="cart__description">${product.description}</p>
+                <p class="cart__price">$ <span> ${product.price}</span></p>
+                <div class='cart__buy' data-inCart = '${product.inCart}'>
+                    <div class='cart__buy-remove'>&ndash;</div>
+                    <div class='cart__buy-count'>${product.quantity}</div>
+                    <div class='cart__buy-add'>+</div>
+                </div>
+                <div class="cart__add">Добавить в карзину</div>
+            </div>
+        </div>`);
+    });
+    this.setHeaderCart();
+    document.querySelectorAll('.cart__add').forEach(item => {
+      item.addEventListener('click', this.cartBuy.bind(this));
+    });
+    document.querySelectorAll('.cart__buy-remove').forEach(item => {
+      item.addEventListener('click', this.cartRemove.bind(this));
+    });
+    document.querySelectorAll('.cart__buy-add').forEach(item => {
+      item.addEventListener('click', this.cartAdd.bind(this));
+    });
+  }
+
+  hashchange() {
+    if (window.location.hash === '#Home') this.drowHomeWindow();
+    if (window.location.hash === '#Cart') this.drowCartWindow();
+    if (window.location.hash === '#Contacts') this.drowContactsWindow();
+  }
+
+  create() {
+    this.element = document.createElement('main');
+    this.element.classList.add('main');
+    (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
+    this.element.innerHTML = ``;
+
+    if (window.location.hash === '') {
+      window.location.hash = 'Home';
+    } else {
+      this.hashchange();
+    }
+
+    window.addEventListener('hashchange', () => {
+      this.hashchange();
+    });
+  }
+
+  init() {
+    this.create();
+    return this.element;
+  }
+
+}
+
+const main = new Main().init(); // <div class="container">
+//         <div class="row">
+//         </div>
+//     </div>
+
 exports.main = main;
 },{"./unity":"../src/js/components/unity.js"}],"../src/js/components/footer.js":[function(require,module,exports) {
 "use strict";
@@ -405,41 +442,27 @@ var _unity = _interopRequireDefault(require("./unity"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+class Footer {
+  element = '';
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var Footer = /*#__PURE__*/function () {
-  function Footer() {
-    _classCallCheck(this, Footer);
-
-    _defineProperty(this, "element", '');
+  create() {
+    this.element = document.createElement('footer');
+    this.element.classList.add('footer');
+    (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
+    this.element.innerHTML = `
+        <div class="container">
+            <div class="footer__cope">@Далеко-далеко за словесными горами в стране.</div>
+        </div>`;
   }
 
-  _createClass(Footer, [{
-    key: "create",
-    value: function create() {
-      this.element = document.createElement('footer');
-      this.element.classList.add('footer');
-      (0, _unity.default)('.app').insertAdjacentElement('beforeend', this.element);
-      this.element.innerHTML = "\n        <div class=\"container\">\n            <div class=\"footer__cope\">@\u0414\u0430\u043B\u0435\u043A\u043E-\u0434\u0430\u043B\u0435\u043A\u043E \u0437\u0430 \u0441\u043B\u043E\u0432\u0435\u0441\u043D\u044B\u043C\u0438 \u0433\u043E\u0440\u0430\u043C\u0438 \u0432 \u0441\u0442\u0440\u0430\u043D\u0435.</div>\n        </div>";
-    }
-  }, {
-    key: "init",
-    value: function init() {
-      this.create();
-      return this.element;
-    }
-  }]);
+  init() {
+    this.create();
+    return this.element;
+  }
 
-  return Footer;
-}();
+}
 
-var footer = new Footer().init();
+const footer = new Footer().init();
 exports.footer = footer;
 },{"./unity":"../src/js/components/unity.js"}],"../src/js/index.js":[function(require,module,exports) {
 "use strict";
@@ -485,7 +508,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49658" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62052" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

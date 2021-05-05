@@ -19,7 +19,7 @@ class Header {
                     </svg>
                     <span class="header__count">0</span>
                 </div>
-                <span class="header__shape-price">$ 88</span>
+                <span class="header__shape-price">$ <span>0</span></span>
             </div>
         </div>`;
     }

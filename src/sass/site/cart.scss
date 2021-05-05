@@ -2,8 +2,9 @@
     padding: 25px 0;
 }
 
-.card {
+.cart {
     overflow: hidden;
+    height: 430px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -36,7 +37,10 @@
         @include font(700, 1.2rem, 1rem, $font-family);
         margin-bottom: 15px;
     }
-    &__buy {
+    &__buy[data-inCart=false] {
+        display: none;
+    }
+    &__buy[data-inCart=true]{
         margin: 0 auto;
         max-width: 200px;
         display: flex;

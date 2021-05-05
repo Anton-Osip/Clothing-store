@@ -23,5 +23,8 @@
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "browserslist": [
+    "last 1 Chrome version"
+  ]
 }

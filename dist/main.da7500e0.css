@@ -402,30 +402,31 @@ body {
   padding: 25px 0;
 }
 
-.card {
+.cart {
   overflow: hidden;
+  height: 430px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
   margin-bottom: 15px;
 }
-.card__img-wrapper {
+.cart__img-wrapper {
   width: 70%;
   margin: 0 auto 10px;
 }
-.card__img {
+.cart__img {
   width: 100%;
   height: 250px;
   margin: 0 auto;
 }
-.card__title {
+.cart__title {
   font: 700 1.2rem/1rem "Raleway", sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 8px;
 }
-.card__description {
+.cart__description {
   font: 400 0.8rem/1rem "Raleway", sans-serif;
   white-space: nowrap;
   overflow: hidden;
@@ -433,11 +434,14 @@ body {
   height: 25px;
   margin-bottom: 8px;
 }
-.card__price {
+.cart__price {
   font: 700 1.2rem/1rem "Raleway", sans-serif;
   margin-bottom: 15px;
 }
-.card__buy {
+.cart__buy[data-inCart=false] {
+  display: none;
+}
+.cart__buy[data-inCart=true] {
   margin: 0 auto;
   max-width: 200px;
   display: flex;
@@ -445,7 +449,7 @@ body {
   justify-content: center;
   margin-bottom: 10px;
 }
-.card__buy-remove {
+.cart__buy-remove {
   width: 25px;
   height: 25px;
   text-align: center;
@@ -458,7 +462,7 @@ body {
   margin-right: 15px;
   cursor: pointer;
 }
-.card__buy-count {
+.cart__buy-count {
   width: 25px;
   height: 25px;
   text-align: center;
@@ -468,7 +472,7 @@ body {
   border-radius: 3px;
   border: 1px solid #000;
 }
-.card__buy-add {
+.cart__buy-add {
   cursor: pointer;
   width: 25px;
   height: 25px;
@@ -481,7 +485,7 @@ body {
   border: 1px solid #000;
   margin-left: 15px;
 }
-.card__add {
+.cart__add {
   font: 700 1rem/1rem "Raleway", sans-serif;
   width: 100%;
   background-color: rgba(0, 203, 0, 0.954);

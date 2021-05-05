@@ -2,16 +2,19 @@ import $ from './unity';
 
 
 class App {
+    
     element = '';
-    storage() {
-        const xhr = new XMLHttpRequest;
-        xhr.open('GET', 'https://fakestoreapi.com/products', true);
-        xhr.send();
-        xhr.addEventListener('readystatechange', () => {
-            if (xhr.readyState != 4 || xhr.status > 300 || xhr.status < 200) return;
-            localStorage.setItem('products', xhr.responseText);
-        })
+
+    async storage() {
+        const response = await fetch('https://fakestoreapi.com/products');
+        const result = await response.json();
+        await result.map((product)=>{
+            product.inCart=false;
+            product.quantity=0;});
+        localStorage.setItem('productsData',JSON.stringify(result));
+        sessionStorage.setItem('productsData',JSON.stringify(result));
     }
+    
     create() {
         this.element = document.createElement('div')
     }
@@ -21,7 +24,6 @@ class App {
     }
     init() {
         if (localStorage.length == 0) this.storage();
-
 
         this.create();
         this.render();
