@@ -301,7 +301,67 @@ class Main {
   }
 
   drowCartWindow() {
-    console.log('cart');
+    (0, _unity.default)('.main').innerHTML = '';
+    this.productsData.forEach(product => {
+      if (product.inCart == true) {
+        (0, _unity.default)('.main').insertAdjacentHTML('beforeend', `
+                        <div class="cart" data-id='${product.id}'>
+                            <div class="cart__img-wrapper">
+                                <img src="${product.image}" alt="${product.title}" class="cart__img">
+                            </div>
+                            <p class="cart__title">${product.title}</p>
+                            <p class="cart__description">${product.description}</p>
+                            <p class="cart__price">$ <span> ${product.price}</span></p>
+                            <div class='cart__buy' data-inCart = '${product.inCart}'>
+                                <div class='cart__buy-remove'>&ndash;</div>
+                                <div class='cart__buy-count'>${product.quantity}</div>
+                                <div class='cart__buy-add'>+</div>
+                            </div>
+                            <div class="cart__add ">Добавить в карзину</div>
+                        </div>`);
+      }
+    });
+    this.setHeaderCart();
+    document.querySelectorAll('.cart').forEach(item => {
+      item.addEventListener('click', this.watchCart.bind(this));
+    });
+    document.querySelectorAll('.cart__add').forEach(item => {
+      item.addEventListener('click', this.cartBuy.bind(this));
+    });
+    document.querySelectorAll('.cart__buy-remove').forEach(item => {
+      item.addEventListener('click', this.cartRemove.bind(this));
+    });
+    document.querySelectorAll('.cart__buy-add').forEach(item => {
+      item.addEventListener('click', this.cartAdd.bind(this));
+    });
+  }
+
+  watchCart(event) {
+    const productElement = event.target.closest('.cart');
+    const eventElementId = +productElement.getAttribute('data-id');
+    const product = this.productsData.find(item => {
+      return item.id == eventElementId;
+    });
+    window.location.hash = `Product/${product.title}`;
+    this.element.innerHTML = `
+            <div class="show-product " data-id='${product.id}'>
+                <div class='container'>
+                    <div class='row'>
+                    <div class="show-product__out">&#10006;</div>
+                        <div class="show-product__img-wrapper col-sm-4 col-12">
+                            <img src="${product.image}" alt="${product.title}" class="show-product__img">
+                        </div>
+                        <div class = 'show-product__text col-sm-8 col-12'>
+                            <p class="show-product__title">${product.title}</p>
+                            <p class="show-product__description">${product.description}</p>
+                            <p class="show-product__price">$ <span> ${product.price}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    (0, _unity.default)('.show-product__out').addEventListener('click', () => {
+      window.location.hash = `Home`;
+    });
   }
 
   setHeaderCart() {
@@ -319,6 +379,7 @@ class Main {
   }
 
   cartBuy(event) {
+    event.stopPropagation();
     const productElement = event.target.closest('.cart');
     const eventElementId = +productElement.getAttribute('data-id');
     const product = this.productsData.find(item => {
@@ -326,10 +387,12 @@ class Main {
     });
     product.inCart = true;
     product.count++;
+    this.cartAdd(event);
     this.drowHomeWindow();
   }
 
   cartRemove(event) {
+    event.stopPropagation();
     const productElement = event.target.closest('.cart');
     const eventElementId = +productElement.getAttribute('data-id');
     const product = this.productsData.find(item => {
@@ -342,9 +405,15 @@ class Main {
       sessionStorage.setItem('productsData', JSON.stringify(this.productsData));
       this.setHeaderCart();
     }
+
+    if (product.quantity == 0) {
+      product.inCart = false;
+      this.drowHomeWindow();
+    }
   }
 
   cartAdd(event) {
+    event.stopPropagation();
     const productElement = event.target.closest('.cart');
     const eventElementId = +productElement.getAttribute('data-id');
     const product = this.productsData.find(item => {
@@ -378,11 +447,14 @@ class Main {
                     <div class='cart__buy-count'>${product.quantity}</div>
                     <div class='cart__buy-add'>+</div>
                 </div>
-                <div class="cart__add">Добавить в карзину</div>
+                <div class="cart__add ">Добавить в карзину</div>
             </div>
         </div>`);
     });
     this.setHeaderCart();
+    document.querySelectorAll('.cart').forEach(item => {
+      item.addEventListener('click', this.watchCart.bind(this));
+    });
     document.querySelectorAll('.cart__add').forEach(item => {
       item.addEventListener('click', this.cartBuy.bind(this));
     });
@@ -424,11 +496,7 @@ class Main {
 
 }
 
-const main = new Main().init(); // <div class="container">
-//         <div class="row">
-//         </div>
-//     </div>
-
+const main = new Main().init();
 exports.main = main;
 },{"./unity":"../src/js/components/unity.js"}],"../src/js/components/footer.js":[function(require,module,exports) {
 "use strict";
@@ -508,7 +576,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62052" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50551" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

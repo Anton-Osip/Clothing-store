@@ -506,4 +506,49 @@ body {
   color: rgba(247, 247, 247, 0.975);
 }
 
+.show-product .row {
+  position: relative;
+}
+.show-product__img {
+  width: 100%;
+}
+.show-product__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-height: 200px;
+}
+.show-product__title {
+  text-align: center;
+  font: 700 1.5rem/1em "Raleway", sans-serif;
+}
+.show-product__description {
+  font: 400 1rem/1em "Raleway", sans-serif;
+}
+.show-product__price {
+  font: 700 2rem/1em "Raleway", sans-serif;
+  color: #378101;
+  text-align: center;
+}
+.show-product__out {
+  font: 700 2rem/1em "Raleway", sans-serif;
+  padding: 5px;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: -20px;
+}
+
+@media (max-width: 540px) {
+  .show-product__title {
+    margin-bottom: 8px;
+  }
+  .show-product__description {
+    margin-bottom: 8px;
+  }
+  .show-product__price {
+    margin-bottom: 8px;
+  }
+}
+
 /*# sourceMappingURL=/main.da7500e0.css.map */
