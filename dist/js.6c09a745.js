@@ -146,17 +146,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class App {
   element = '';
 
-  async storage() {
-    const response = await fetch('https://fakestoreapi.com/products');
-    const result = await response.json();
-    await result.map(product => {
-      product.inCart = false;
-      product.quantity = 0;
-    });
-    localStorage.setItem('productsData', JSON.stringify(result));
-    sessionStorage.setItem('productsData', JSON.stringify(result));
-  }
-
   create() {
     this.element = document.createElement('div');
   }
@@ -167,7 +156,6 @@ class App {
   }
 
   init() {
-    if (localStorage.length == 0) this.storage();
     this.create();
     this.render();
   }
@@ -291,7 +279,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 class Main {
   constructor() {
-    this.productsData = JSON.parse(sessionStorage.getItem('productsData'));
+    this.productsData = JSON.parse(localStorage.getItem('productsData'));
   }
 
   element = '';
@@ -365,7 +353,7 @@ class Main {
   }
 
   setHeaderCart() {
-    const productsData = JSON.parse(sessionStorage.getItem('productsData'));
+    const productsData = JSON.parse(localStorage.getItem('productsData'));
     let price = 0;
     let count = 0;
 
@@ -402,8 +390,7 @@ class Main {
     if (product.quantity != 0) {
       product.quantity--;
       this.drowHomeWindow();
-      sessionStorage.setItem('productsData', JSON.stringify(this.productsData));
-      this.setHeaderCart();
+      localStorage.setItem('productsData', JSON.stringify(this.productsData));
     }
 
     if (product.quantity == 0) {
@@ -422,18 +409,28 @@ class Main {
     product.quantity++;
     product.inCart = true;
     this.drowHomeWindow();
-    sessionStorage.setItem('productsData', JSON.stringify(this.productsData));
+    localStorage.setItem('productsData', JSON.stringify(this.productsData));
     this.setHeaderCart();
   }
 
+  loader() {
+    console.log((0, _unity.default)('.main'));
+    this.element.innerHTML = ` <div class="lds-hourglass"></div>`;
+    setTimeout(() => {
+      this.drowHomeWindow();
+    }, 5000);
+  }
+
   drowHomeWindow() {
-    (0, _unity.default)('.main').innerHTML = '';
-    (0, _unity.default)('.main').innerHTML = `  <div class="container">
+    if (localStorage.length == 0) {
+      this.loader();
+    } else {
+      (0, _unity.default)('.main').innerHTML = `  <div class="container">
                                     <div class="row">
                                     </div>
                                 </div>`;
-    this.productsData.forEach(product => {
-      (0, _unity.default)('.main>.container>.row').insertAdjacentHTML('beforeend', `
+      this.productsData.forEach(product => {
+        (0, _unity.default)('.main>.container>.row').insertAdjacentHTML('beforeend', `
         <div class=" col-12 col-sm-6 col-md-4 col-lg-3">
             <div class="cart" data-id='${product.id}'>
                 <div class="cart__img-wrapper">
@@ -450,20 +447,21 @@ class Main {
                 <div class="cart__add ">Добавить в карзину</div>
             </div>
         </div>`);
-    });
-    this.setHeaderCart();
-    document.querySelectorAll('.cart').forEach(item => {
-      item.addEventListener('click', this.watchCart.bind(this));
-    });
-    document.querySelectorAll('.cart__add').forEach(item => {
-      item.addEventListener('click', this.cartBuy.bind(this));
-    });
-    document.querySelectorAll('.cart__buy-remove').forEach(item => {
-      item.addEventListener('click', this.cartRemove.bind(this));
-    });
-    document.querySelectorAll('.cart__buy-add').forEach(item => {
-      item.addEventListener('click', this.cartAdd.bind(this));
-    });
+      });
+      this.setHeaderCart();
+      document.querySelectorAll('.cart').forEach(item => {
+        item.addEventListener('click', this.watchCart.bind(this));
+      });
+      document.querySelectorAll('.cart__add').forEach(item => {
+        item.addEventListener('click', this.cartBuy.bind(this));
+      });
+      document.querySelectorAll('.cart__buy-remove').forEach(item => {
+        item.addEventListener('click', this.cartRemove.bind(this));
+      });
+      document.querySelectorAll('.cart__buy-add').forEach(item => {
+        item.addEventListener('click', this.cartAdd.bind(this));
+      });
+    }
   }
 
   hashchange() {
@@ -489,7 +487,22 @@ class Main {
     });
   }
 
+  async storage() {
+    const response = await fetch('https://fakestoreapi.com/products');
+    const result = await response.json();
+    result.map(product => {
+      product.inCart = false;
+      product.quantity = 0;
+    });
+    localStorage.setItem('productsData', JSON.stringify(result));
+  }
+
   init() {
+    if (localStorage.length == 0 || JSON.parse(localStorage.getItem('products')) < this.productsData) {
+      this.storage();
+      this.loader();
+    }
+
     this.create();
     return this.element;
   }
@@ -576,7 +589,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50551" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56496" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

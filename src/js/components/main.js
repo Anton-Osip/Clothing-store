@@ -3,7 +3,7 @@ import $ from './unity';
 
 class Main {
     constructor(){
-        this.productsData =JSON.parse(sessionStorage.getItem('productsData'))
+        this.productsData =JSON.parse(localStorage.getItem('productsData'))
     }
     element = '';
     
@@ -31,6 +31,7 @@ class Main {
                             <div class="cart__add ">Добавить в карзину</div>
                         </div>`
                 );
+                
             }        
         });
         this.setHeaderCart()
@@ -68,7 +69,7 @@ class Main {
     }
 
     setHeaderCart(){
-        const productsData =JSON.parse(sessionStorage.getItem('productsData'));
+        const productsData =JSON.parse(localStorage.getItem('productsData'));
         let price = 0;
         let count = 0;
     for(let elem of productsData){
@@ -96,14 +97,12 @@ class Main {
         if(product.quantity!=0){ 
             product.quantity--;
             this.drowHomeWindow()
-            sessionStorage.setItem('productsData',JSON.stringify(this.productsData));
-            this.setHeaderCart()
+            localStorage.setItem('productsData',JSON.stringify(this.productsData));
         }
         if(product.quantity==0){
             product.inCart = false;
             this.drowHomeWindow()
-        }
-        
+        }   
     }
     cartAdd(event){
         event. stopPropagation()
@@ -113,11 +112,24 @@ class Main {
             product.quantity++;
             product.inCart = true;
             this.drowHomeWindow()
-            sessionStorage.setItem('productsData',JSON.stringify(this.productsData));
+            localStorage.setItem('productsData',JSON.stringify(this.productsData));
             this.setHeaderCart()
+    };
+
+    loader(){
+
+        console.log( $('.main'));  
+        this.element.innerHTML =` <div class="lds-hourglass"></div>`
+        setTimeout(()=>{
+                this.drowHomeWindow()}
+            ,5000)
     }
-    drowHomeWindow(){
-        $('.main').innerHTML='';
+
+
+    drowHomeWindow(){     
+        if(localStorage.length==0){
+            this.loader()
+        }else{ 
         $('.main').innerHTML=`  <div class="container">
                                     <div class="row">
                                     </div>
@@ -149,6 +161,7 @@ class Main {
         document.querySelectorAll('.cart__buy-remove').forEach((item)=>{item.addEventListener('click',this.cartRemove.bind(this))})
         document.querySelectorAll('.cart__buy-add').forEach((item)=>{item.addEventListener('click',this.cartAdd.bind(this))})
     }
+    }
     
 
     hashchange(){
@@ -173,7 +186,20 @@ class Main {
         })
     }
 
+    async storage() {
+        const response = await fetch('https://fakestoreapi.com/products');
+        const result = await response.json();
+        result.map((product)=>{
+            product.inCart=false;
+            product.quantity=0;});
+        localStorage.setItem('productsData',JSON.stringify(result));
+    }
+
     init() {
+        if (localStorage.length == 0 || JSON.parse(localStorage.getItem('products'))<this.productsData ){
+            this.storage();
+            this.loader();
+        }
         this.create();
         return this.element;
 
