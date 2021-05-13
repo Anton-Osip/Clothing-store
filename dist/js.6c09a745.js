@@ -235,7 +235,7 @@ class Nav {
             <span class="nav__arrow-up">&uArr;</span>
             <div class="nav__links">
                 <a id='home' class="nav__link">Главная страница</a>
-                <a id='cart' class="nav__link">Корзина</a>
+                <a id='cart' class="nav__link">Карзина</a>
                 <a id='contacts' class="nav__link">Контакты</a>
             </div>
         </div>`;
@@ -282,42 +282,97 @@ class Main {
   element = '';
 
   drowContactsWindow() {
-    console.log('Contacts');
+    (0, _unity.default)('.main').innerHTML = '';
+    (0, _unity.default)('.main').insertAdjacentHTML('beforeend', `
+        <section class="contacts">
+            <div class="container">
+                <h2 class="contacts__title">Contact Us</h2>
+                <div class="contacts__wrapper">
+                    <div class="contacts__img-box">
+                        <img src="./img/contacts-bg.png" alt="фон">
+                    </div>
+                    <form class='contacts__form'>
+                        <label class="contacts__lable">Your Email Address</label>
+                        <input type="email" class="contacts__input input" placeholder="something@website.com">
+                        <label class="contacts__lable">Subject</label>
+                        <input type="text" class="contacts__input input"
+                                placeholder="Question about your article">
+                        <label class="contacts__lable">Message</label>
+                        <textarea class="contacts__input contacts__input-mes input"
+                                placeholder="Your message starts with…"></textarea>
+                        <button class="btn contacts__btn">Send a Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="start">
+            <div class="container">
+                <div class="start__wrapper">
+                    <div class="start__img-box">
+                        <img src="./img/ouch2.svg" alt="фото">
+                    </div>
+                    <div class="start__info">
+                        <h3 class="start__title">
+                                Start your free trial.
+                        </h3>
+                        <p class="start__description">
+                                Get notified about company updates, news and blog posts. We hate spam.
+                        </p>
+                        <form class="star__form">
+                            <input type="text" class="start__input input" placeholder="Enter your email">
+                            <button class="btn start__btn">Get Started</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>`);
+  }
+
+  deliteProduct(event) {
+    const productElement = event.target.closest('.container');
+    const eventElementId = +productElement.getAttribute('data-id');
+    const product = this.productsData.find(item => {
+      return item.id == eventElementId;
+    });
+    product.inCart = false;
+    product.quantity = 0;
+    this.setHeaderCart();
+    this.drowCartWindow();
   }
 
   drowCartWindow() {
     (0, _unity.default)('.main').innerHTML = '';
+    const cart = [];
     this.productsData.forEach(product => {
-      if (product.inCart == true) {
+      product.inCart == true ? cart.push(product) : '';
+    });
+
+    if (cart.length === 0) {
+      (0, _unity.default)('.main').insertAdjacentHTML('beforeend', `
+            <div class='container'>
+                <div class = 'free'>
+                    <p class='free-text'>Нет товаров</p>
+                </div>
+            </div>`);
+    } else {
+      cart.forEach(product => {
         (0, _unity.default)('.main').insertAdjacentHTML('beforeend', `
-                        <div class="cart" data-id='${product.id}'>
-                            <div class="cart__img-wrapper">
-                                <img src="${product.image}" alt="${product.title}" class="cart__img">
+                    <div class="container" data-id='${product.id}'>
+                        <div class="basket row " >
+                            <div class="basket__img-wrapper col-12 col-lg-1">
+                                <img src="${product.image}" alt="${product.title}" class="basket__img">
                             </div>
-                            <p class="cart__title">${product.title}</p>
-                            <p class="cart__description">${product.description}</p>
-                            <p class="cart__price">$ <span> ${product.price}</span></p>
-                            <div class='cart__buy' data-inCart = '${product.inCart}'>
-                                <div class='cart__buy-remove'>&ndash;</div>
-                                <div class='cart__buy-count'>${product.quantity}</div>
-                                <div class='cart__buy-add'>+</div>
-                            </div>
-                            <div class="cart__add ">Добавить в карзину</div>
-                        </div>`);
-      }
-    });
-    this.setHeaderCart();
-    document.querySelectorAll('.cart').forEach(item => {
-      item.addEventListener('click', this.watchCart.bind(this));
-    });
-    document.querySelectorAll('.cart__add').forEach(item => {
-      item.addEventListener('click', this.cartBuy.bind(this));
-    });
-    document.querySelectorAll('.cart__buy-remove').forEach(item => {
-      item.addEventListener('click', this.cartRemove.bind(this));
-    });
-    document.querySelectorAll('.cart__buy-add').forEach(item => {
-      item.addEventListener('click', this.cartAdd.bind(this));
+                            <p class="basket__title col-12 col-lg-6">${product.title}</p>
+                            <p class="basket__price col-12 col-lg-2">$ <span> ${product.price}</span></p>
+                            <span class='col-12 col-lg-2 basket__buy-text-count'>Количество:<div class='basket__buy-count '>${product.quantity}</div></span>
+                            <div class='basket__delite col-lg-1'>&#10006;</div>
+                        </div>
+                    </div>`);
+      });
+    }
+
+    document.querySelectorAll('.basket__delite').forEach(item => {
+      item.addEventListener('click', this.deliteProduct.bind(this));
     });
   }
 
@@ -350,13 +405,14 @@ class Main {
   }
 
   setHeaderCart() {
-    const productsData = JSON.parse(localStorage.getItem('productsData'));
     let price = 0;
     let count = 0;
 
-    for (let elem of productsData) {
-      count += elem.quantity;
-      price += elem.price * elem.quantity;
+    for (let elem of this.productsData) {
+      if (elem.inCart == true) {
+        count += elem.quantity;
+        price += elem.price * elem.quantity;
+      }
     }
 
     (0, _unity.default)('.header__count').innerHTML = count;
@@ -484,7 +540,7 @@ class Main {
   }
 
   async storage() {
-    const response = await fetch('https://fakestoreapi.com/products');
+    const response = await fetch('https:/fakestoreapi.com/products');
     const result = await response.json();
     result.map(product => {
       product.inCart = false;
@@ -586,7 +642,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60968" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64074" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
