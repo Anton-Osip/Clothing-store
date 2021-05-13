@@ -16,6 +16,7 @@
   "homepage": "https://github.com/Anton-Osip/Clothing-store#readme",
   "devDependencies": {
     "parcel-bundler": "^1.12.5",
+    "prettier": "2.3.0",
     "sass": "^1.32.12"
   },
   "dependencies": {
@@ -24,7 +25,6 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  
   "browserslist": [
     "last 1 Chrome version"
   ]

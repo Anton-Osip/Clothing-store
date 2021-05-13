@@ -278,10 +278,7 @@ var _unity = _interopRequireDefault(require("./unity"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class Main {
-  constructor() {
-    this.productsData = JSON.parse(localStorage.getItem('productsData'));
-  }
-
+  productsData = JSON.parse(localStorage.getItem('productsData'));
   element = '';
 
   drowContactsWindow() {
@@ -414,7 +411,6 @@ class Main {
   }
 
   loader() {
-    console.log((0, _unity.default)('.main'));
     this.element.innerHTML = ` <div class="lds-hourglass"></div>`;
     setTimeout(() => {
       this.drowHomeWindow();
@@ -431,22 +427,22 @@ class Main {
                                 </div>`;
       this.productsData.forEach(product => {
         (0, _unity.default)('.main>.container>.row').insertAdjacentHTML('beforeend', `
-        <div class=" col-12 col-sm-6 col-md-4 col-lg-3">
-            <div class="cart" data-id='${product.id}'>
-                <div class="cart__img-wrapper">
-                    <img src="${product.image}" alt="${product.title}" class="cart__img">
-                </div>
-                <p class="cart__title">${product.title}</p>
-                <p class="cart__description">${product.description}</p>
-                <p class="cart__price">$ <span> ${product.price}</span></p>
-                <div class='cart__buy' data-inCart = '${product.inCart}'>
-                    <div class='cart__buy-remove'>&ndash;</div>
-                    <div class='cart__buy-count'>${product.quantity}</div>
-                    <div class='cart__buy-add'>+</div>
-                </div>
-                <div class="cart__add ">Добавить в карзину</div>
-            </div>
-        </div>`);
+                <div class=" col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="cart" data-id='${product.id}'>
+                        <div class="cart__img-wrapper">
+                            <img src="${product.image}" alt="${product.title}" class="cart__img">
+                        </div>
+                        <p class="cart__title">${product.title}</p>
+                        <p class="cart__description">${product.description}</p>
+                        <p class="cart__price">$ <span> ${product.price}</span></p>
+                        <div class='cart__buy' data-inCart = '${product.inCart}'>
+                            <div class='cart__buy-remove'>&ndash;</div>
+                            <div class='cart__buy-count'>${product.quantity}</div>
+                            <div class='cart__buy-add'>+</div>
+                        </div>
+                        <div class="cart__add ">Добавить в карзину</div>
+                    </div>
+                </div>`);
       });
       this.setHeaderCart();
       document.querySelectorAll('.cart').forEach(item => {
@@ -495,15 +491,16 @@ class Main {
       product.quantity = 0;
     });
     localStorage.setItem('productsData', JSON.stringify(result));
+    this.productsData = JSON.parse(localStorage.getItem('productsData'));
   }
 
   init() {
+    this.create();
+
     if (localStorage.length == 0 || JSON.parse(localStorage.getItem('products')) < this.productsData) {
       this.storage();
-      this.loader();
     }
 
-    this.create();
     return this.element;
   }
 
@@ -589,7 +586,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56496" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60968" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

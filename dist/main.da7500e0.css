@@ -551,8 +551,9 @@ body {
   }
 }
 .lds-hourglass {
-  display: inline-block;
   position: relative;
+  margin: 0 auto;
+  vertical-align: middle;
   width: 80px;
   height: 80px;
 }

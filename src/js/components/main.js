@@ -2,9 +2,7 @@ import $ from './unity';
 
 
 class Main {
-    constructor(){
-        this.productsData =JSON.parse(localStorage.getItem('productsData'))
-    }
+    productsData =JSON.parse(localStorage.getItem('productsData'))
     element = '';
     
     drowContactsWindow(){
@@ -117,8 +115,6 @@ class Main {
     };
 
     loader(){
-
-        console.log( $('.main'));  
         this.element.innerHTML =` <div class="lds-hourglass"></div>`
         setTimeout(()=>{
                 this.drowHomeWindow()}
@@ -130,38 +126,37 @@ class Main {
         if(localStorage.length==0){
             this.loader()
         }else{ 
-        $('.main').innerHTML=`  <div class="container">
+            $('.main').innerHTML=`  <div class="container">
                                     <div class="row">
                                     </div>
                                 </div>`
-        this.productsData.forEach((product) => {
-        $('.main>.container>.row').insertAdjacentHTML('beforeend', `
-        <div class=" col-12 col-sm-6 col-md-4 col-lg-3">
-            <div class="cart" data-id='${product.id}'>
-                <div class="cart__img-wrapper">
-                    <img src="${product.image}" alt="${product.title}" class="cart__img">
-                </div>
-                <p class="cart__title">${product.title}</p>
-                <p class="cart__description">${product.description}</p>
-                <p class="cart__price">$ <span> ${product.price}</span></p>
-                <div class='cart__buy' data-inCart = '${product.inCart}'>
-                    <div class='cart__buy-remove'>&ndash;</div>
-                    <div class='cart__buy-count'>${product.quantity}</div>
-                    <div class='cart__buy-add'>+</div>
-                </div>
-                <div class="cart__add ">Добавить в карзину</div>
-            </div>
-        </div>`);
-        });
-        this.setHeaderCart()
+            this.productsData.forEach((product) => {
+            $('.main>.container>.row').insertAdjacentHTML('beforeend', `
+                <div class=" col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="cart" data-id='${product.id}'>
+                        <div class="cart__img-wrapper">
+                            <img src="${product.image}" alt="${product.title}" class="cart__img">
+                        </div>
+                        <p class="cart__title">${product.title}</p>
+                        <p class="cart__description">${product.description}</p>
+                        <p class="cart__price">$ <span> ${product.price}</span></p>
+                        <div class='cart__buy' data-inCart = '${product.inCart}'>
+                            <div class='cart__buy-remove'>&ndash;</div>
+                            <div class='cart__buy-count'>${product.quantity}</div>
+                            <div class='cart__buy-add'>+</div>
+                        </div>
+                        <div class="cart__add ">Добавить в карзину</div>
+                    </div>
+                </div>`);
+            });
+            this.setHeaderCart()
 
-
-        document.querySelectorAll('.cart').forEach((item)=>{item.addEventListener('click',this.watchCart.bind(this))})
-        document.querySelectorAll('.cart__add').forEach((item)=>{item.addEventListener('click',this.cartBuy.bind(this))})
-        document.querySelectorAll('.cart__buy-remove').forEach((item)=>{item.addEventListener('click',this.cartRemove.bind(this))})
-        document.querySelectorAll('.cart__buy-add').forEach((item)=>{item.addEventListener('click',this.cartAdd.bind(this))})
-    }
-    }
+            document.querySelectorAll('.cart').forEach((item)=>{item.addEventListener('click',this.watchCart.bind(this))})
+            document.querySelectorAll('.cart__add').forEach((item)=>{item.addEventListener('click',this.cartBuy.bind(this))})
+            document.querySelectorAll('.cart__buy-remove').forEach((item)=>{item.addEventListener('click',this.cartRemove.bind(this))})
+            document.querySelectorAll('.cart__buy-add').forEach((item)=>{item.addEventListener('click',this.cartAdd.bind(this))})
+            }
+        }
     
 
     hashchange(){
@@ -193,17 +188,16 @@ class Main {
             product.inCart=false;
             product.quantity=0;});
         localStorage.setItem('productsData',JSON.stringify(result));
+        this.productsData =JSON.parse(localStorage.getItem('productsData'))
+
     }
 
     init() {
+        this.create();
         if (localStorage.length == 0 || JSON.parse(localStorage.getItem('products'))<this.productsData ){
             this.storage();
-            this.loader();
         }
-        this.create();
         return this.element;
-
-        
     }
 }
 const main = new Main().init();
