@@ -129,7 +129,7 @@ class Main {
             }
         }
         $('.header__count').innerHTML = count;
-        $('.header__shape-price>span').innerHTML = price;
+        $('.header__shape-price>span').innerHTML = price.toFixed(2);
     }
 
     cartBuy(event){

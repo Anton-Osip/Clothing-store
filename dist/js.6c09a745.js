@@ -235,7 +235,7 @@ class Nav {
             <span class="nav__arrow-up">&uArr;</span>
             <div class="nav__links">
                 <a id='home' class="nav__link">Главная страница</a>
-                <a id='cart' class="nav__link">Карзина</a>
+                <a id='cart' class="nav__link">Корзина</a>
                 <a id='contacts' class="nav__link">Контакты</a>
             </div>
         </div>`;
@@ -416,7 +416,7 @@ class Main {
     }
 
     (0, _unity.default)('.header__count').innerHTML = count;
-    (0, _unity.default)('.header__shape-price>span').innerHTML = price;
+    (0, _unity.default)('.header__shape-price>span').innerHTML = price.toFixed(2);
   }
 
   cartBuy(event) {
@@ -642,7 +642,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64074" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54601" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

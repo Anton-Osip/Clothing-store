@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "parcel publick/index.html --open",
-    "build": "parcel build publick/index.html"
+    "start": "parcel public/index.html --open",
+    "build": "parcel build public/index.html"
   },
   "repository": {
     "type": "git",
