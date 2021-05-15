@@ -192,7 +192,7 @@ class Header {
             <div class="header__basket">
                 <div class="header__icon">
                     <svg width="23" height="23">
-                        <use xlink:href="../img/icons.svg#shape"></use>
+                        <use xlink:href="./img/icons.svg#shape"></use>
                     </svg>
                     <span class="header__count">0</span>
                 </div>
@@ -614,7 +614,7 @@ var _main = _interopRequireDefault(require("./components/main.js"));
 var _footer = _interopRequireDefault(require("./components/footer.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./components/unity":"../src/js/components/unity.js","./components/app.js":"../src/js/components/app.js","./components/header.js":"../src/js/components/header.js","./components/nav.js":"../src/js/components/nav.js","./components/main.js":"../src/js/components/main.js","./components/footer.js":"../src/js/components/footer.js"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./components/unity":"../src/js/components/unity.js","./components/app.js":"../src/js/components/app.js","./components/header.js":"../src/js/components/header.js","./components/nav.js":"../src/js/components/nav.js","./components/main.js":"../src/js/components/main.js","./components/footer.js":"../src/js/components/footer.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -642,7 +642,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54968" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55281" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -818,5 +818,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","../src/js/index.js"], null)
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","../src/js/index.js"], null)
 //# sourceMappingURL=/js.6c09a745.js.map
