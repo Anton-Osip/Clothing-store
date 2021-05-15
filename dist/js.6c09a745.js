@@ -192,7 +192,7 @@ class Header {
             <div class="header__basket">
                 <div class="header__icon">
                     <svg width="23" height="23">
-                        <use xlink:href="./img/icons.svg#shape"></use>
+                        <use xlink:href="../img/icons.svg#shape"></use>
                     </svg>
                     <span class="header__count">0</span>
                 </div>
